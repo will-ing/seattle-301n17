@@ -6,10 +6,16 @@ $('#search-form').on('submit', getData);
 
 function getData(event) {
   event.preventDefault();
-  let city = $('#city').val();
+  let typedInCity = $('#city').val();
+
+  const ajaxSettings = {
+    method: 'get',
+    dataType: 'json',
+    data: { city: typedInCity },
+  };
 
   // get the data
-  $.ajax('/fake-data/location.json')
+  $.ajax('http://localhost:3000/location', ajaxSettings)
     .then( location => {
       renderTitle(location);
       renderMap(location);
@@ -29,12 +35,18 @@ function renderMap(data) {
   container.html( Mustache.render(template, data));
 }
 
-function renderRestaurants(data) {
+function renderRestaurants(locationObject) {
   //restaurants
   let template = $('#restaurants-template').html(); // <li></li>
   let container = $('#restaurants'); // <ul></ul>
 
-  $.ajax('/fake-data/restaurants.json')
+  const ajaxSettings = {
+    method: 'get',
+    dataType: 'json',
+    data: locationObject,
+  };
+
+  $.ajax('http://localhost:3000/restaurants', ajaxSettings)
     .then( listOfRestaurants => {
       listOfRestaurants.forEach( restaurant => {
         container.append(Mustache.render(template, restaurant));
