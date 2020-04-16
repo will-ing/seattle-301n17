@@ -35,6 +35,7 @@ function handleLocation( request, response ) {
   let city = request.query.city.toLowerCase();
 
   // is this city in our cache?
+  // is this in our DATABASE??? (select statement)
   if( locationCache[city] ) {
     console.log(city, 'Came from Memory');
     response.json( locationCache[city] );
@@ -57,6 +58,7 @@ function handleLocation( request, response ) {
       let locationData = data.body[0];
       let location = new Location(city, locationData);
       // put this 'location' object into the cache
+      // Actually ... insert it into the database
       locationCache[city] = location;
       response.json(location);
     });
