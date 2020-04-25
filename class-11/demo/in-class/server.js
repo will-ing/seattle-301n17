@@ -8,6 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+// Bring in EJS as the "view" (templating) engine
+app.set('view engine', 'ejs');
+
 app.use( express.urlencoded({extended:true }));
 
 app.use( express.static('./www') );
@@ -17,12 +20,21 @@ app.get('/', (request, response) => {
   response.status(200).send('Hello World');
 });
 
+// .render() to show a view, and merge in an object
 app.get('/person', (request, response) => {
-  response.status(200).send(`Welcome, ${request.query.name}, your hair is ${request.query.hair}`);
+  let data = {
+    name: request.query.name,
+    hairStyle: request.query.hair,
+    kids: ['Zach', 'Allie'],
+  };
+
+  console.log(data);
+
+  response.status(200).render('person.ejs', {person:data});
 });
 
-app.post('/city', (request, response) => {
-  response.status(200).send(request.body.article);
+app.post('/article', (request, response) => {
+  response.status(200).render('article', {article: request.body.content});
 });
 
 // This will force an error
@@ -33,7 +45,7 @@ app.get('/badthing', (request,response) => {
 // 404 Handler
 app.use('*', (request, response) => {
   console.log(request);
-  response.status(404).send(`Can't Find ${request.pathname}`);
+  response.status(404).send(`Can't Find ${request.path}`);
 });
 
 // Error Handler
