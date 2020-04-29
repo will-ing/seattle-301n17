@@ -17,7 +17,7 @@ app.use( express.static('./www') );
 
 // This is a good one
 app.get('/', (request, response) => {
-  response.status(200).send('Hello World');
+  response.status(200).render('pages/index');
 });
 
 // .render() to show a view, and merge in an object
